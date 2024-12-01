@@ -11,8 +11,6 @@ import (
 	"strings"
 )
 
-func main() {}
-
 func ParseCSV(path string) ([]int, []int, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -65,4 +63,28 @@ func CalculatePairwiseDistance(leftColumn, rightColumn *[]int) (int, error) {
 	}
 
 	return distance, nil
+}
+
+func CalculateSimilarityScore(leftColumn, rightColumn *[]int) (int, error) {
+	left := *leftColumn
+	right := *rightColumn
+
+	if len(left) != len(right) {
+		return 0, errors.New("slices must be of the same length")
+	}
+
+	rightColumnMapping := make(map[int]int)
+
+	for i := 0; i < len(left); i++ {
+		rightColumnMapping[right[i]] += 1
+	}
+
+	similarityScore := 0
+	for i := 0; i < len(left); i++ {
+		amountOfOccurancesRight := rightColumnMapping[left[i]]
+
+		similarityScore += amountOfOccurancesRight * left[i]
+	}
+
+	return similarityScore, nil
 }

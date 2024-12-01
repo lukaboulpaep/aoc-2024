@@ -44,3 +44,44 @@ func TestCalculatePairwiseDistance(t *testing.T) {
 		})
 	}
 }
+
+func TestCalculateSimilarityScore(t *testing.T) {
+	tests := []struct {
+		name           string
+		inputPath      string
+		expectedOutput int
+	}{
+		{
+			name:           "example input data should result to 31",
+			inputPath:      "data/example_input.csv",
+			expectedOutput: 31,
+		},
+		{
+			name:           "aoc input data should result to 23126924",
+			inputPath:      "data/input.csv",
+			expectedOutput: 23126924,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			leftColumn, rightColumn, err := ParseCSV(tt.inputPath)
+			if err != nil {
+				t.Errorf("Error occurred when parsing the CSV file %v", err)
+			}
+
+			similarityScore, err := CalculateSimilarityScore(&leftColumn, &rightColumn)
+			if err != nil {
+				t.Errorf("Error occurred when calculating the similarityScore %v", err)
+			}
+
+			if similarityScore != tt.expectedOutput {
+				t.Errorf("Expected output to be %d, instead got %d", tt.expectedOutput, similarityScore)
+			}
+		})
+	}
+}
